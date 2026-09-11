@@ -11,7 +11,7 @@
         @endphp
 
         <h4>Formulário Aluno</h4>
-        <form action="{{ $action }}" method="post">
+        <form action="{{ $action }}" method="post" enctype="multipart/form-data">
             @csrf
             @if (!empty($data->id))
                 @method('PUT')
@@ -44,6 +44,13 @@
                 </select>
 
             </div>
+            
+             <div class="col-6">
+                <label for="imagem">Imagem</label>
+                <input type="file" name="imagem" class="form-control"
+                    value="{{ old('imagem', $data->imagem ?? '') }}">
+            </div>
+
             <div class="mt-2">
                 <button type="submit" class="btn btn-success">Salvar</button>
                 <a href="{{ url('aluno') }}" class="btn btn-primary"> Voltar</a>

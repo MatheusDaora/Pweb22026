@@ -29,10 +29,12 @@ class AlunoController extends Controller
             'nome' => 'required',
             'cpf' => 'required',
             'categoria_id' => 'required',
+            'imagem' => 'nullable|image|mimes:jpeg,png,jpg',
         ], [
             'nome.required' => "O :attribute é obrigatorio",
             'cpf.required' => "O :attribute é obrigatorio",
-            'categoria_id.required' => "O :attribute é obrigatorio"
+            'imagem.image' => "O :attribute deve ser enviado",
+            'imagem.mimes' => "O :attribute deve ser um arquivo do tipo: jpeg, png, jpg"
         ]);
     }
 
@@ -41,7 +43,16 @@ class AlunoController extends Controller
         //dd($request->all());
         $this->validateForm($request);
 
-        Aluno::create($request->all());
+        $data = $request->all();
+        $imagem = $request->file('imagem');
+        if ($imagem) {
+            $nome_imagem = date('YmdHis') . '.' . $imagem->getClientOriginalExtension();
+            $diretorio ='imagens/aluno/';
+            $imagem->storeAs($diretorio, $nome_imagem, 'public');
+            $data['imagem'] = $diretorio . $nome_imagem;
+        }
+
+        Aluno::find($id)->update($data);
 
         return redirect('aluno')->with("success", 'Registro Salvo com sucesso!');
     }
