@@ -1,10 +1,10 @@
 @extends('main')
-@section('titulo', 'Listagem de Alunos')
+@section('titulo', 'Listagem de Cursos')
 @section('conteudo')
     <div class="row">
 
-        <h3>Listagem de Alunos</h3>
-        <form action="{{ route('aluno.search') }}" method="post">
+        <h3>Listagem de Cursos</h3>
+        <form action="{{ route('curso.search') }}" method="post">
             @csrf
             <div class="row">
                 <div class="col-2">
@@ -21,7 +21,7 @@
                 </div>
                 <div class="col-5">
                     <button type="submit" class="btn btn-primary">Buscar</button>
-                    <a href="{{ url('aluno/create') }}" class="btn btn-success"> Novo</a>
+                    <a href="{{ url('curso/create') }}" class="btn btn-success"> Novo</a>
                 </div>
             </div>
         </form>
@@ -35,9 +35,9 @@
                 <tr>
                     <th scope="col">#</th>
                     <th scope="col">Nome</th>
-                    <th scope="col">CPF</th>
-                    <th scope="col">Telefone</th>
-                    <th scope="col">Categoria</th>
+                    <th scope="col">Requisito</th>
+                    <th scope="col">Carga Horária</th>
+                    <th scope="col">Valor</th>
                     <th scope="col">Ação</th>
                     <th scope="col">Ação</th>
                 </tr>
@@ -47,14 +47,14 @@
                     <tr>
                         <th scope='row'>{{ $item->id }}</th>
                         <td>{{ $item->nome }}</td>
-                        <td>{{ $item->cpf }}</td>
-                        <td>{{ $item->telefone }}</td>
-                        <td>{{ $item->categoria->nome }}</td>
+                        <td>{{ $item->requisito }}</td>
+                        <td>{{ $item->carga_horaria }}</td>
+                        <td>{{ $item->valor }}</td>
                         <td>
-                            <a class='btn btn-warning' title='Editar' href="{{ route('aluno.edit', $item->id) }}">Editar</a>
+                            <a class='btn btn-warning' title='Editar' href="{{ route('curso.edit', $item->id) }}">Editar</a>
                         </td>
                         <td>
-                            <form action="{{ route('aluno.destroy', $item->id) }}" method="post">
+                            <form action="{{ route('curso.destroy', $item->id) }}" method="post">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class='btn btn-danger' title='Exclur'

@@ -19,7 +19,7 @@ class AlunoController extends Controller
     {
         $categorias = CategoriaAluno::orderBy('nome')->get();
 
-        return view('aluno.form', compact('categorias'));
+        return view('aluno.form')->with(compact('categorias'));
     }
 
 
@@ -29,12 +29,12 @@ class AlunoController extends Controller
             'nome' => 'required',
             'cpf' => 'required',
             'categoria_id' => 'required',
-            'imagem' => 'nullable|image|mimes:jpeg,png,jpg',
+            'imagem' => 'nullable|image|mimes:png,jpg,jpeg',
         ], [
             'nome.required' => "O :attribute é obrigatorio",
             'cpf.required' => "O :attribute é obrigatorio",
             'imagem.image' => "O :attribute deve ser enviado",
-            'imagem.mimes' => "O :attribute deve ser um arquivo do tipo: jpeg, png, jpg"
+            'imagem.mimes' => "O :attribute deve ser das extensões:PNG,JPEG,JPG",
         ]);
     }
 
@@ -45,14 +45,15 @@ class AlunoController extends Controller
 
         $data = $request->all();
         $imagem = $request->file('imagem');
+
         if ($imagem) {
-            $nome_imagem = date('YmdHis') . '.' . $imagem->getClientOriginalExtension();
-            $diretorio ='imagens/aluno/';
+            $nome_imagem = date('YmdiHs') . "." . $imagem->getClientOriginalExtension();
+            $diretorio = "imagem/aluno/";
             $imagem->storeAs($diretorio, $nome_imagem, 'public');
             $data['imagem'] = $diretorio . $nome_imagem;
         }
 
-        Aluno::find($id)->update($data);
+        Aluno::create($data);
 
         return redirect('aluno')->with("success", 'Registro Salvo com sucesso!');
     }
@@ -62,12 +63,8 @@ class AlunoController extends Controller
         $data = Aluno::find($id);
         $categorias = CategoriaAluno::orderBy('nome')->get();
 
-        // dd($data);
-        //return view('aluno.form')->with(['data' => $data]);
-        return view('aluno.form', [
-            compact('data'),
-            compact('categorias'),
-        ]);
+        // dd($categorias);
+        return view('aluno.form')->with(compact('data', 'categorias'));
     }
 
 
@@ -76,7 +73,18 @@ class AlunoController extends Controller
         //dd($request->all());
         $this->validateForm($request);
 
-        Aluno::find($id)->update($request->all());
+        $data = $request->all();
+        $imagem = $request->file('imagem');
+
+        if ($imagem) {
+            $nome_imagem = date('YmdiHs') . "." . $imagem->getClientOriginalExtension();
+            $diretorio = "imagem/aluno/";
+
+            $imagem->storeAs($diretorio, $nome_imagem, 'public');
+            $data['imagem'] = $diretorio . $nome_imagem;
+        }
+
+        Aluno::find($id)->update($data);
 
         return redirect('aluno')->with("success", 'Registro Atualizado com sucesso!');
     }
